@@ -64,7 +64,7 @@ jobs:
       - name: "SSH: Clone or Pull Repo"
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
-            cd /home/ubuntu/django-test || git clone ${{ secrets.REPO_NAME }} django-test
+            cd /home/ubuntu/ || git clone ${{ secrets.REPO_NAME }} django-test
             cd django-test
             git pull origin main
           EOF
