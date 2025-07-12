@@ -40,7 +40,9 @@ jobs:
         
       - name: Run django commands inside docker
         run: |
-          docker run --rm ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
-            -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" python manage.py migrate
-          docker run --rm ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
-            -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" python manage.py test
+          docker run --rm -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
+             ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
+             python manage.py migrate
+          docker run --rm -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
+            ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
+            python manage.py test
