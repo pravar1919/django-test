@@ -47,6 +47,11 @@ jobs:
       #       ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
       #       python manage.py test
 
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
       - name: "SSH: Create .env File"
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
