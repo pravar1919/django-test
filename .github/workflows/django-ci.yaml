@@ -52,15 +52,32 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Deploy to EC2
+      - name: "SSH: Clone or Pull Repo"
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
-            cd /home/ubuntu/django-test || git clone ${{secrets.REPO_NAME}} django-test && cd django-test
+            cd /home/ubuntu/django-test || git clone ${{ secrets.REPO_NAME }} django-test
+            cd django-test
             git pull origin main
-            docker stop django-app || true
-            docker rm django-app || true
+          EOF
+
+      - name: "SSH: Stop Existing Container"
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "docker stop django-app || true"
+
+      - name: "SSH: Remove Old Container"
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "docker rm django-app || true"
+
+      - name: "SSH: Build Docker Image"
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
+            cd /home/ubuntu/django-test
             docker build -t django-app .
-            docker run -d --name django-app -p 80:8000 \
-              -e ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}" \
+          EOF
+
+      - name: "SSH: Run Docker Container"
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
+            docker run -d --name django-app -p 80:8000
               django-app
           EOF
