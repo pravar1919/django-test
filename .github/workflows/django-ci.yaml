@@ -40,5 +40,5 @@ jobs:
         
       - name: Run django commands inside docker
         run: |
-          docker exec -it ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} python manage.py migrate
-          docker exec -it ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} python manage.py test
+          docker run --rm ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} python manage.py migrate
+          docker run --rm ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} python manage.py test
