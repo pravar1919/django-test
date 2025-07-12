@@ -23,4 +23,4 @@ EXPOSE 8000
 # ENV ALLOWED_HOSTS=0.0.0.0;localhost;127.0.0.1
 
 # Default command (optional)
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "cor.wsgi:application", "--bind", "0.0.0.0:8000"]
