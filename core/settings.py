@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +26,14 @@ SECRET_KEY = 'django-insecure-vptckuutms(&ah0hmehhvgrdkvz*z)%&)+j3ma($z8+7gx05*u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
+print(config("ALLOWED_HOST"))
+ALLOWED_HOST = config("ALLOWED_HOST", default=[])
 
+if ALLOWED_HOST:
+    ALLOWED_HOST = ALLOWED_HOST.split(";")
+
+print(ALLOWED_HOST)
 # Application definition
 
 INSTALLED_APPS = [

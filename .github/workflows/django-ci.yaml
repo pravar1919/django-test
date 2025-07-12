@@ -11,22 +11,34 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: 3.12
+      CONTAINER_NAME: "my-django-app"
+      CONTAINER_VERSION: "latest"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+      # - name: Setup python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: ${{ env.PYTHON_VERSION }}
+      # - name: Install Dependency
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
+      # - name: Run migrations
+      #   run: |
+      #     python manage.py migrate
+      # - name: Run tests
+      #   run: |
+      #     python manage.py test
 
-      - name: Install Dependency
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run migrations
-        run: |
-          python manage.py migrate
-      - name: Run tests
-        run: |
-          python manage.py test
+      - name: Docker build
+        uses: docker/setup-buildx-actions@v3
       
+      - name: Build Docker image
+        run: |
+          docker build -t ${{env.CONTAINER_NAME}}@${{env.CONTAINER_VERSION}} .
+        
+      - name: Run django commands inside docker
+        run: |
+          docker exec -it ${{env.CONTAINER_NAME}}@${{env.CONTAINER_VERSION}} python manage.py migrate
+          docker exec -it ${{env.CONTAINER_NAME}}@${{env.CONTAINER_VERSION}} python manage.py test
