@@ -20,7 +20,7 @@ COPY . .
 
 # Expose port (optional)
 EXPOSE 8000
-ENV ALLOWED_HOST=0.0.0.0;localhost;127.0.0.1
+# ENV ALLOWED_HOST=0.0.0.0;localhost;127.0.0.1
 
 # Default command (optional)
 CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
