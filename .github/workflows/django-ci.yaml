@@ -31,18 +31,36 @@ jobs:
       #   run: |
       #     python manage.py test
 
-      - name: Docker build
-        uses: docker/setup-buildx-action@v3
+      # - name: Docker build
+      #   uses: docker/setup-buildx-action@v3
       
-      - name: Build Docker image
-        run: |
-          docker build -t ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} .
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} .
         
-      - name: Run django commands inside docker
+      # - name: Run django commands inside docker
+      #   run: |
+      #     docker run --rm -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
+      #        ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
+      #        python manage.py migrate
+      #     docker run --rm -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
+      #       ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
+      #       python manage.py test
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Deploy to EC2
         run: |
-          docker run --rm -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
-             ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
-             python manage.py migrate
-          docker run --rm -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
-            ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
-            python manage.py test
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << 'EOF'
+            cd /home/ubuntu/django-test || git clone ${{secrets.REPO_NAME}} django-test && cd django-test
+            git pull origin main
+            docker stop django-app || true
+            docker rm django-app || true
+            docker build -t django-app .
+            docker run -d --name django-app -p 80:8000 \
+              -e ALLOWED_HOST=0.0.0.0 \
+              django-app
+          EOF
