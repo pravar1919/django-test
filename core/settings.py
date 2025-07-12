@@ -27,13 +27,13 @@ SECRET_KEY = 'django-insecure-vptckuutms(&ah0hmehhvgrdkvz*z)%&)+j3ma($z8+7gx05*u
 DEBUG = True
 
 
-print(config("ALLOWED_HOST"))
-ALLOWED_HOST = config("ALLOWED_HOST", default=[])
+print(config("ALLOWED_HOSTS"))
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=[])
 
-if ALLOWED_HOST:
-    ALLOWED_HOST = ALLOWED_HOST.split(";")
+if ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ALLOWED_HOSTS.split(";")
 
-print(ALLOWED_HOST)
+print(ALLOWED_HOSTS)
 # Application definition
 
 INSTALLED_APPS = [
