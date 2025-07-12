@@ -52,6 +52,14 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      - name: "SSH: Clone or Pull Repo"
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
+            cd /home/ubuntu/django-test || git clone ${{ secrets.REPO_NAME }} django-test
+            cd django-test
+            git pull origin main
+          EOF
+
       - name: "SSH: Create .env File"
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
