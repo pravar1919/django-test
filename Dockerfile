@@ -6,6 +6,7 @@ ENV PYTHONUNBUFFERED=1
 # Set work directory
 WORKDIR /app
 
+RUN some-invalid-command
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev gcc && \
@@ -23,4 +24,4 @@ EXPOSE 8000
 # ENV ALLOWED_HOSTS=0.0.0.0;localhost;127.0.0.1
 
 # Default command (optional)
-CMD ["gunicorn", "cor.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
