@@ -47,10 +47,19 @@ jobs:
       #       ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} \
       #       python manage.py test
 
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.9.0
+      # - name: Add SSH key
+      #   uses: webfactory/ssh-agent@v0.9.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: "SSH: Clone or Pull Repo"
         run: |
