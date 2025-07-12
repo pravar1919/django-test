@@ -62,7 +62,7 @@ jobs:
       - name: "SSH: Build Docker Image (temporary)"
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
-            cd /home/ubuntu/django-test
+            cd /home/ubuntu/django-tests
             docker build -t django-app:new .
           EOF
 
