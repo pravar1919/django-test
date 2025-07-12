@@ -36,9 +36,9 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build -t ${{env.CONTAINER_NAME}}@${{env.CONTAINER_VERSION}} .
+          docker build -t ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} .
         
       - name: Run django commands inside docker
         run: |
-          docker exec -it ${{env.CONTAINER_NAME}}@${{env.CONTAINER_VERSION}} python manage.py migrate
-          docker exec -it ${{env.CONTAINER_NAME}}@${{env.CONTAINER_VERSION}} python manage.py test
+          docker exec -it ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} python manage.py migrate
+          docker exec -it ${{env.CONTAINER_NAME}}:${{env.CONTAINER_VERSION}} python manage.py test
