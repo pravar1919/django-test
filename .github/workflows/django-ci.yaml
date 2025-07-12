@@ -54,13 +54,13 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
             cd /home/ubuntu/django-test || git clone ${{secrets.REPO_NAME}} django-test && cd django-test
             git pull origin main
             docker stop django-app || true
             docker rm django-app || true
             docker build -t django-app .
             docker run -d --name django-app -p 80:8000 \
-              -e ALLOWED_HOST=0.0.0.0 \
+              -e ALLOWED_HOST="${{ secrets.ALLOWED_HOST }}" \
               django-app
           EOF
