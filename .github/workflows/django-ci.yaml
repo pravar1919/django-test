@@ -63,7 +63,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} << EOF
             cd /home/ubuntu/django-test
-            docker build -t django-app:new .
+            docker build --no-cache -t django-app:new .
           EOF
 
       # Optional: Run test inside new container
